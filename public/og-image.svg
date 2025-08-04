@@ -1,1 +1,79 @@
- 
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#0000FF"/>
+  
+  <!-- Grid pattern overlay for tech feel -->
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  
+  <!-- Main content container -->
+  <g transform="translate(60, 60)">
+    
+    <!-- Logo and icon -->
+    <g transform="translate(0, 40)">
+      <!-- Lightning bolt icon background -->
+      <rect x="0" y="0" width="80" height="80" rx="20" fill="#BFFF00"/>
+      
+      <!-- Lightning bolt icon -->
+      <g transform="translate(20, 15)">
+        <path d="M25 0 L15 20 L20 20 L15 40 L25 20 L20 20 L25 0 Z" fill="#000000" stroke="none"/>
+      </g>
+      
+      <!-- HYPERTHON text -->
+      <text x="100" y="55" font-family="Arial, sans-serif" font-size="64" font-weight="900" fill="white" letter-spacing="-2px">HYPERTHON</text>
+    </g>
+    
+    <!-- Main headline -->
+    <g transform="translate(0, 180)">
+      <text x="0" y="0" font-family="Arial, sans-serif" font-size="72" font-weight="900" fill="white" letter-spacing="-3px">
+        <tspan x="0" dy="0">THE ULTIMATE</tspan>
+        <tspan x="0" dy="85">SPEED CODING</tspan>
+        <tspan x="0" dy="85">COMPETITION</tspan>
+      </text>
+    </g>
+    
+    <!-- Tour info banner -->
+    <g transform="translate(0, 450)">
+      <rect x="0" y="0" width="400" height="50" rx="25" fill="#BFFF00"/>
+      <text x="200" y="32" font-family="Arial, sans-serif" font-size="24" font-weight="900" fill="#000000" text-anchor="middle" letter-spacing="1px">INDIA TOUR 2025</text>
+    </g>
+    
+    <!-- Key highlights -->
+    <g transform="translate(680, 180)">
+      <!-- 9 Cities -->
+      <g transform="translate(0, 0)">
+        <rect x="0" y="0" width="200" height="45" rx="22" fill="rgba(255,255,255,0.15)"/>
+        <text x="100" y="29" font-family="Arial, sans-serif" font-size="20" font-weight="900" fill="white" text-anchor="middle">9 CITIES</text>
+      </g>
+      
+      <!-- Live Streamed -->
+      <g transform="translate(0, 60)">
+        <rect x="0" y="0" width="200" height="45" rx="22" fill="rgba(255,255,255,0.15)"/>
+        <text x="100" y="29" font-family="Arial, sans-serif" font-size="20" font-weight="900" fill="white" text-anchor="middle">LIVE STREAM</text>
+      </g>
+      
+      <!-- Championship -->
+      <g transform="translate(0, 120)">
+        <rect x="0" y="0" width="200" height="45" rx="22" fill="rgba(255,255,255,0.15)"/>
+        <text x="100" y="29" font-family="Arial, sans-serif" font-size="20" font-weight="900" fill="white" text-anchor="middle">CHAMPIONSHIP</text>
+      </g>
+      
+      <!-- Powered by Base -->
+      <g transform="translate(0, 240)">
+        <text x="0" y="0" font-family="Arial, sans-serif" font-size="16" font-weight="600" fill="rgba(255,255,255,0.8)">POWERED BY</text>
+        <text x="0" y="30" font-family="Arial, sans-serif" font-size="36" font-weight="900" fill="#FFFFFF">base</text>
+      </g>
+    </g>
+    
+    <!-- Bottom tagline -->
+    <g transform="translate(0, 520)">
+      <text x="0" y="0" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="rgba(255,255,255,0.9)">Code under pressure. Compete with legends. Become the champion.</text>
+    </g>
+    
+  </g>
+</svg> 
