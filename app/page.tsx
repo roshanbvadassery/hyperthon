@@ -3,6 +3,7 @@
 import { Calendar, MapPin, Trophy, Zap, Users, Play, Layers, Menu, X } from "lucide-react";
 import RegisterMovingBanner from "./components/RegisterMovingBanner";
 import { useState } from "react";
+import Link from "next/link";
 
 export default function Home() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -23,7 +24,7 @@ export default function Home() {
           <div className="hidden md:flex items-center space-x-6">
             <a href="#about" className="text-white hover:text-lime-300 transition-colors font-bold uppercase scroll-smooth">About</a>
             <a href="#tour" className="text-white hover:text-lime-300 transition-colors font-bold uppercase scroll-smooth">Tour</a>
-            <a href="#register" className="text-white hover:text-lime-300 transition-colors font-bold uppercase scroll-smooth">Register</a>
+            <Link href="/register" className="text-white hover:text-lime-300 transition-colors font-bold uppercase scroll-smooth">Register</Link>
             <a 
               href="https://youtu.be/pA76_X43RdM"
               target="_blank"
@@ -80,13 +81,13 @@ export default function Home() {
               >
                 Tour
               </a>
-              <a 
-                href="#register" 
+              <Link 
+                href="/register" 
                 className="text-white hover:text-lime-300 transition-colors font-bold uppercase text-2xl scroll-smooth"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Register
-              </a>
+              </Link>
               <a 
                 href="https://youtu.be/pA76_X43RdM"
                 target="_blank"
@@ -128,10 +129,10 @@ export default function Home() {
 
             {/* Action buttons */}
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-6 sm:mb-8">
-              <div className="bg-[#0000ff] text-white px-6 sm:px-10 py-3 sm:py-4 rounded-full font-black text-sm sm:text-lg uppercase tracking-wide cursor-pointer hover:bg-[#0000cc] transition-colors flex items-center justify-center">
+              <Link href="/register" className="bg-[#0000ff] text-white px-6 sm:px-10 py-3 sm:py-4 rounded-full font-black text-sm sm:text-lg uppercase tracking-wide cursor-pointer hover:bg-[#0000cc] transition-colors flex items-center justify-center">
                 <Zap className="mr-2 h-4 w-4 sm:h-6 sm:w-6" />
                 REGISTER NOW
-              </div>
+              </Link>
               <a
                 href="https://youtu.be/pA76_X43RdM"
                 target="_blank"
@@ -307,15 +308,18 @@ export default function Home() {
                   </div>
                 </div>
                 
-                <div 
-                  className={`w-full py-2 sm:py-3 rounded-full font-black text-xs sm:text-sm uppercase tracking-wide text-center cursor-pointer transition-colors ${
-                    event.status === 'planned' 
-                      ? 'bg-gray-400 text-white' 
-                      : 'bg-[#0000ff] text-white hover:bg-[#0000cc]'
-                  }`}
-                >
-                  {event.status === 'planned' ? 'COMING SOON' : `REGISTER FOR ${event.city.toUpperCase()}`}
-                </div>
+                {event.status === 'planned' ? (
+                  <div className="w-full py-2 sm:py-3 rounded-full font-black text-xs sm:text-sm uppercase tracking-wide text-center cursor-pointer transition-colors bg-gray-400 text-white">
+                    COMING SOON
+                  </div>
+                ) : (
+                  <Link 
+                    href="/register"
+                    className="block w-full py-2 sm:py-3 rounded-full font-black text-xs sm:text-sm uppercase tracking-wide text-center cursor-pointer transition-colors bg-[#0000ff] text-white hover:bg-[#0000cc]"
+                  >
+                    REGISTER FOR {event.city.toUpperCase()}
+                  </Link>
+                )}
               </div>
             ))}
           </div>
@@ -415,10 +419,10 @@ export default function Home() {
             </p>
             
             <div className="space-y-4 sm:space-y-6">
-              <div className="bg-[#0000ff] text-white px-6 sm:px-12 py-4 sm:py-5 rounded-full font-black text-sm sm:text-xl uppercase tracking-wide cursor-pointer hover:bg-[#0000cc] transition-colors inline-flex items-center">
+              <Link href="/register" className="bg-[#0000ff] text-white px-6 sm:px-12 py-4 sm:py-5 rounded-full font-black text-sm sm:text-xl uppercase tracking-wide cursor-pointer hover:bg-[#0000cc] transition-colors inline-flex items-center">
                 <Zap className="mr-2 sm:mr-3 h-4 w-4 sm:h-6 sm:w-6" />
                 REGISTER FOR YOUR CITY
-              </div>
+              </Link>
               
               <p className="text-black/60 font-semibold text-sm sm:text-base">
                 Follow us for updates, behind-the-scenes, and speed coding tips
