@@ -9,6 +9,3 @@ By default, this template supports JSX syntax with Tailwind CSS classes, the sha
 Use icons from lucide-react for logos.
 
 Use stock photos from unsplash where appropriate, only valid URLs you know exist.
-
-
-CRITICAL RULE: NEVER WRITE `package.json` directly use npm comands to install packages if needed 
