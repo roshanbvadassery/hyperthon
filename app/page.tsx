@@ -1,7 +1,12 @@
-import { Calendar, MapPin, Trophy, Zap, Users, Play, Layers, Menu } from "lucide-react";
+"use client";
+
+import { Calendar, MapPin, Trophy, Zap, Users, Play, Layers, Menu, X } from "lucide-react";
 import RegisterMovingBanner from "./components/RegisterMovingBanner";
+import { useState } from "react";
 
 export default function Home() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-[#0000ff]">
       {/* Navigation */}
@@ -16,19 +21,85 @@ export default function Home() {
             </div>
           </div>
           <div className="hidden md:flex items-center space-x-6">
-            <a href="#about" className="text-white hover:text-lime-300 transition-colors font-bold uppercase">About</a>
-            <a href="#tour" className="text-white hover:text-lime-300 transition-colors font-bold uppercase">Tour</a>
-            <a href="#register" className="text-white hover:text-lime-300 transition-colors font-bold uppercase">Register</a>
-            <div className="bg-lime-400 text-black px-6 py-3 rounded-full font-black text-sm uppercase tracking-wide cursor-pointer hover:bg-lime-300 transition-colors">
+            <a href="#about" className="text-white hover:text-lime-300 transition-colors font-bold uppercase scroll-smooth">About</a>
+            <a href="#tour" className="text-white hover:text-lime-300 transition-colors font-bold uppercase scroll-smooth">Tour</a>
+            <a href="#register" className="text-white hover:text-lime-300 transition-colors font-bold uppercase scroll-smooth">Register</a>
+            <a 
+              href="https://youtu.be/pA76_X43RdM"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-lime-400 text-black px-6 py-3 rounded-full font-black text-sm uppercase tracking-wide cursor-pointer hover:bg-lime-300 transition-colors"
+            >
               WATCH LIVE
-            </div>
+            </a>
           </div>
           {/* Mobile menu button */}
-          <div className="md:hidden">
-            <Menu className="h-6 w-6 text-white" />
-          </div>
+          <button 
+            className="md:hidden"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            {isMobileMenuOpen ? (
+              <X className="h-6 w-6 text-white" />
+            ) : (
+              <Menu className="h-6 w-6 text-white" />
+            )}
+          </button>
         </div>
       </nav>
+
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 bg-[#0000ff] z-50 md:hidden">
+          <div className="container mx-auto px-4 py-6">
+            {/* Mobile menu header */}
+            <div className="flex items-center justify-between mb-12">
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 bg-lime-400 rounded-2xl flex items-center justify-center">
+                  <Zap className="h-5 w-5 text-black font-bold" />
+                </div>
+                <span className="text-xl font-black text-white uppercase tracking-tight">HYPERTHON</span>
+              </div>
+              <button onClick={() => setIsMobileMenuOpen(false)}>
+                <X className="h-6 w-6 text-white" />
+              </button>
+            </div>
+
+            {/* Mobile menu items */}
+            <div className="flex flex-col space-y-8">
+              <a 
+                href="#about" 
+                className="text-white hover:text-lime-300 transition-colors font-bold uppercase text-2xl scroll-smooth"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                About
+              </a>
+              <a 
+                href="#tour" 
+                className="text-white hover:text-lime-300 transition-colors font-bold uppercase text-2xl scroll-smooth"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Tour
+              </a>
+              <a 
+                href="#register" 
+                className="text-white hover:text-lime-300 transition-colors font-bold uppercase text-2xl scroll-smooth"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Register
+              </a>
+              <a 
+                href="https://youtu.be/pA76_X43RdM"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-lime-400 text-black px-6 py-4 rounded-full font-black text-lg uppercase tracking-wide cursor-pointer hover:bg-lime-300 transition-colors text-center"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                WATCH LIVE
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-6 sm:py-12">
@@ -104,7 +175,7 @@ export default function Home() {
       </section>
 
       {/* Vision Section */}
-      <section className="container mx-auto px-4 py-8 sm:py-12">
+      <section id="about" className="container mx-auto px-4 py-8 sm:py-12">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-8 sm:mb-12">
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 sm:mb-6 uppercase tracking-tight">
@@ -147,7 +218,7 @@ export default function Home() {
       </section>
 
       {/* Tour Section */}
-      <section className="container mx-auto px-4 py-8 sm:py-12">
+      <section id="tour" className="container mx-auto px-4 py-8 sm:py-12">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-8 sm:mb-12">
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 sm:mb-6 uppercase tracking-tight">
@@ -334,7 +405,7 @@ export default function Home() {
       </section>
 
       {/* Register Section */}
-      <section className="container mx-auto px-4 py-8 sm:py-12">
+      <section id="register" className="container mx-auto px-4 py-8 sm:py-12">
         <div className="max-w-4xl mx-auto">
           <div className="bg-white rounded-[2rem] sm:rounded-[3rem] p-6 sm:p-12 text-center">
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-black mb-4 sm:mb-6 uppercase tracking-tight">Ready to Code?</h2>
