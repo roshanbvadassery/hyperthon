@@ -165,11 +165,20 @@ export default function Home() {
 
       {/* Base Partnership Banner */}
       <section className="container mx-auto px-4 mb-6 sm:mb-8">
-        <div className="bg-white rounded-[1rem] sm:rounded-[2rem] p-4 sm:p-6 text-center">
-          <div className="flex items-center justify-center gap-2">
+        <div className="bg-white rounded-[1rem] sm:rounded-[2rem] p-2 sm:p-2 text-center">
+          <div className="flex items-center justify-center">
             <span className="text-black font-bold uppercase tracking-wider text-xs sm:text-sm">POWERED BY</span>
-            <div className="flex items-center">
-              <span className="text-xl sm:text-2xl font-black text-blue-600">base</span>
+            <div className="flex items-center mb-1">
+              <div className="w-24 h-24 sm:w-24 sm:h-24 rounded-lg overflow-hidden">
+                <video 
+                  autoPlay 
+                  muted 
+                  loop 
+                  playsInline
+                  className="w-full h-full object-cover"
+                  src="https://www.base.org/videos/motion/motion.mp4"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -374,7 +383,19 @@ export default function Home() {
         <div className="max-w-4xl mx-auto">
           <div className="bg-white rounded-[2rem] sm:rounded-[3rem] p-6 sm:p-12 text-center">
             <div className="flex items-center justify-center gap-2 sm:gap-4 mb-6 sm:mb-8">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-black uppercase">What is <span className="text-blue-700 lowercase">base?</span></h2>
+              <h2 className="text-3xl sm:text-3xl md:text-3xl lg:text-3xl font-black text-black flex items-center gap-2">
+                what is
+                <a href="https://base.org" target="_blank" rel="noopener noreferrer">
+                  <div className="w-24 h-8 sm:w-32 sm:h-10 rounded-lg overflow-hidden">
+                    <img 
+                      src="/base.svg"
+                      alt="Base"
+                      className="h-8 sm:h-10 w-auto"
+                    />
+                  </div>
+                </a>
+                ?
+              </h2>
             </div>
             
             <p className="text-sm sm:text-lg md:text-xl text-black/80 leading-relaxed font-bold mb-6 sm:mb-8 max-w-2xl mx-auto">
@@ -400,7 +421,7 @@ export default function Home() {
               href="https://base.org"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-blue-600 text-white px-6 sm:px-10 py-3 sm:py-4 rounded-full font-black text-sm sm:text-lg uppercase tracking-wide cursor-pointer hover:bg-blue-700 transition-colors inline-block"
+              className="bg-[#0000ff] text-white px-6 sm:px-10 py-3 sm:py-4 rounded-full font-black text-sm sm:text-lg uppercase tracking-wide cursor-pointer hover:bg-blue-700 transition-colors inline-block"
             >
               Learn More About Base
             </a>
@@ -472,9 +493,12 @@ export default function Home() {
             
             <div className="text-white/80 text-center md:text-right font-semibold">
               <p className="text-sm sm:text-base">&copy; 2025 Hyperthon.org. All rights reserved.</p>
-              <p className="text-xs sm:text-sm mt-1">
-                Sponsored by <span className="text-lime-400 font-black">Base</span> • 
-                The ultimate speed coding competition.
+              <p className="text-xs sm:text-sm mt-1 flex items-center justify-center md:justify-end gap-1">
+                Sponsored by 
+                <span className="inline-flex items-center gap-1">
+                  <span className="text-white font-black">base</span>
+                </span> 
+                • The ultimate speed coding competition.
               </p>
             </div>
           </div>

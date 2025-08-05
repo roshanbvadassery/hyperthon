@@ -3,9 +3,48 @@ export const revalidate = 0
 
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
+import { createClient } from '@supabase/supabase-js'
 
-export async function GET() {
+async function verifyAuth(request: NextRequest) {
+  const authHeader = request.headers.get('authorization');
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return null;
+  }
+
+  const token = authHeader.split(' ')[1];
+  
+  // Create a client with the user's token to verify authentication
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+  
+  const supabaseUser = createClient(supabaseUrl, supabaseAnonKey, {
+    global: {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  });
+
+  const { data: { user }, error } = await supabaseUser.auth.getUser();
+  
+  if (error || !user) {
+    return null;
+  }
+
+  return user;
+}
+
+export async function GET(request: NextRequest) {
   try {
+    // Verify authentication
+    const user = await verifyAuth(request);
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
     if (!supabaseAdmin) {
       return NextResponse.json(
         { error: 'Admin client not configured' },

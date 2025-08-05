@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import { Users, MapPin, Calendar, Download, Zap, RefreshCw } from "lucide-react";
+import { Users, MapPin, Calendar, Download, Zap, RefreshCw, LogOut, Lock } from "lucide-react";
 import Link from "next/link";
+import type { User } from '@supabase/supabase-js';
 
 interface Registration {
   id: string;
@@ -38,7 +39,93 @@ interface Analytics {
   avg_registrations_per_day: number;
 }
 
+// Add login component
+function AdminLogin({ onLogin }: { onLogin: (user: User) => void }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) throw error;
+      if (data.user) onLogin(data.user);
+    } catch (error: any) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-[#0000ff] flex items-center justify-center">
+      <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md">
+        <div className="text-center mb-8">
+          <div className="w-16 h-16 bg-[#0000ff] rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <Lock className="h-8 w-8 text-white" />
+          </div>
+          <h1 className="text-2xl font-black text-[#0000ff] uppercase">Admin Login</h1>
+          <p className="text-gray-600">Access Hyperthon Dashboard</p>
+        </div>
+
+        <form onSubmit={handleLogin} className="space-y-4">
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              Email
+            </label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0000ff]"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              Password
+            </label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0000ff]"
+              required
+            />
+          </div>
+
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+              {error}
+            </div>
+          )}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-[#0000ff] text-white py-2 px-4 rounded-lg font-bold hover:bg-[#0000cc] transition-colors disabled:opacity-50"
+          >
+            {loading ? "Signing in..." : "Sign In"}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
 export default function AdminDashboard() {
+  const [user, setUser] = useState<User | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
   const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [cityStats, setCityStats] = useState<CityStats[]>([]);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
@@ -49,10 +136,40 @@ export default function AdminDashboard() {
     searchTerm: ""
   });
 
+  // Check authentication status
+  useEffect(() => {
+    // Check current session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+      setAuthLoading(false);
+    });
+
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+      setAuthLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setUser(null);
+  };
+
   const fetchData = async () => {
+    if (!user) return;
+    
     setLoading(true);
     try {
-      const response = await fetch('/api/admin');
+      const response = await fetch('/api/admin', {
+        headers: {
+          'Authorization': `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`
+        }
+      });
       
       if (!response.ok) {
         throw new Error('Failed to fetch admin data');
@@ -72,8 +189,27 @@ export default function AdminDashboard() {
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (user) {
+      fetchData();
+    }
+  }, [user]);
+
+  // Show loading during auth check
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-[#0000ff] flex items-center justify-center">
+        <div className="text-white text-center">
+          <div className="animate-spin h-12 w-12 border-4 border-white border-t-transparent rounded-full mx-auto mb-4"></div>
+          <p className="text-xl font-bold">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show login if not authenticated
+  if (!user) {
+    return <AdminLogin onLogin={setUser} />;
+  }
 
   const exportToCSV = () => {
     const headers = [
@@ -144,12 +280,20 @@ export default function AdminDashboard() {
               </div>
             </div>
             <div className="flex items-center space-x-4">
+              <span className="text-sm text-gray-600">Welcome, {user.email}</span>
               <button
                 onClick={fetchData}
                 className="flex items-center px-4 py-2 bg-[#0000ff] text-white rounded-lg font-bold hover:bg-[#0000cc] transition-colors"
               >
                 <RefreshCw className="h-4 w-4 mr-2" />
                 Refresh
+              </button>
+              <button
+                onClick={handleLogout}
+                className="flex items-center px-4 py-2 bg-red-500 text-white rounded-lg font-bold hover:bg-red-600 transition-colors"
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                Logout
               </button>
               <Link 
                 href="/"
