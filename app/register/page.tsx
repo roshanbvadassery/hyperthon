@@ -63,11 +63,59 @@ export default function Register() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState<{type: 'success' | 'error', text: string} | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    console.log('Form submitted:', formData);
-    alert('Registration submitted! We\'ll be in touch soon.');
+    setIsSubmitting(true);
+    setSubmitMessage(null);
+    
+    try {
+      const response = await fetch('/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setSubmitMessage({
+          type: 'success',
+          text: `🎉 Registration successful! Welcome to Hyperthon ${result.data.city}, ${result.data.name}!`
+        });
+        // Reset form after successful submission
+        setFormData({
+          firstName: "",
+          lastName: "",
+          email: "",
+          phone: "",
+          telegram: "",
+          city: "",
+          experience: "",
+          github: "",
+          linkedin: "",
+          preferredLanguages: [],
+          agreedToTerms: false,
+          agreedToMarketing: false
+        });
+      } else {
+        setSubmitMessage({
+          type: 'error',
+          text: result.error || 'Registration failed. Please try again.'
+        });
+      }
+    } catch (error) {
+      setSubmitMessage({
+        type: 'error',
+        text: 'Network error. Please check your connection and try again.'
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -300,12 +348,13 @@ export default function Register() {
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-black font-bold mb-2 uppercase text-xs sm:text-sm">GitHub Profile</label>
+                      <label className="block text-black font-bold mb-2 uppercase text-xs sm:text-sm">GitHub Profile *</label>
                       <input
                         type="url"
                         name="github"
                         value={formData.github}
                         onChange={handleInputChange}
+                        required
                         className="w-full px-3 sm:px-4 py-3 text-sm sm:text-base rounded-lg sm:rounded-xl border-2 border-gray-200 focus:border-[#0000ff] focus:outline-none font-semibold"
                         placeholder="https://github.com/yourusername"
                       />
@@ -326,8 +375,6 @@ export default function Register() {
                 </div>
               </div>
 
-
-
               {/* Terms and Conditions */}
               <div className="bg-gray-50 rounded-[1.5rem] p-6 sm:p-8">
                 <div className="space-y-4">
@@ -342,8 +389,8 @@ export default function Register() {
                       className="mt-1 w-5 h-5 text-[#0000ff] bg-white border-2 border-gray-300 rounded focus:ring-[#0000ff] focus:ring-2"
                     />
                     <label htmlFor="terms" className="text-black font-semibold text-sm">
-                      I agree to the <span className="text-[#0000ff] font-black underline cursor-pointer">Terms and Conditions</span> and 
-                      <span className="text-[#0000ff] font-black underline cursor-pointer"> Privacy Policy</span> of Hyperthon 2025. *
+                      I agree to the <Link href="/terms" className="text-[#0000ff] font-black underline hover:text-[#0000cc] transition-colors">Terms and Conditions</Link> and 
+                      <Link href="/privacy" className="text-[#0000ff] font-black underline hover:text-[#0000cc] transition-colors"> Privacy Policy</Link> of Hyperthon 2025. *
                     </label>
                   </div>
                   
@@ -363,19 +410,42 @@ export default function Register() {
                 </div>
               </div>
 
+              {/* Success/Error Messages */}
+              {submitMessage && (
+                <div className={`p-4 sm:p-6 rounded-xl border-2 text-center font-bold ${
+                  submitMessage.type === 'success' 
+                    ? 'bg-green-50 border-green-500 text-green-800'
+                    : 'bg-red-50 border-red-500 text-red-800'
+                }`}>
+                  <p className="text-sm sm:text-base">{submitMessage.text}</p>
+                </div>
+              )}
+
               {/* Submit Button */}
               <div className="text-center">
                 <button
                   type="submit"
-                  disabled={!formData.agreedToTerms || !formData.city || !formData.firstName || !formData.lastName || !formData.email || !formData.phone || !formData.experience}
+                  disabled={isSubmitting || !formData.agreedToTerms || !formData.city || !formData.firstName || !formData.lastName || !formData.email || !formData.phone || !formData.experience || !formData.github}
                   className="bg-[#0000ff] text-white px-8 sm:px-12 py-4 sm:py-5 rounded-full font-black text-lg sm:text-xl uppercase tracking-wide cursor-pointer hover:bg-[#0000cc] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center mx-auto"
                 >
-                  <Zap className="mr-2 sm:mr-3 h-5 w-5 sm:h-6 sm:w-6" />
-                  REGISTER NOW
+                  {isSubmitting ? (
+                    <>
+                      <div className="mr-2 sm:mr-3 h-5 w-5 sm:h-6 sm:w-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      SUBMITTING...
+                    </>
+                  ) : (
+                    <>
+                      <Zap className="mr-2 sm:mr-3 h-5 w-5 sm:h-6 sm:w-6" />
+                      REGISTER NOW
+                    </>
+                  )}
                 </button>
                 
                 <p className="text-black/60 font-semibold text-sm mt-4">
-                  Registration confirmation will be sent to your email
+                  {isSubmitting 
+                    ? "Please wait while we process your registration..."
+                    : "Registration confirmation will be sent to your email"
+                  }
                 </p>
               </div>
             </form>
