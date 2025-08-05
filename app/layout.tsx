@@ -9,6 +9,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://hyperthon.org'),
   title: 'Hyperthon.org - The Ultimate Coding Competition Tour',
   description: 'Join the nationwide speed coding competition. We tour every city to find the fastest, most skilled programmers. Where coding meets esports.',
   keywords: ['coding competition', 'programming contest', 'speed coding', 'esports', 'hackathon', 'tournament'],
