@@ -453,6 +453,18 @@ export default function AdminDashboard() {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="font-semibold text-gray-900">{reg.first_name} {reg.last_name}</div>
                       <div className="text-sm text-gray-500">{reg.email}</div>
+                      {reg.github_profile && (
+                        <div className="mt-1">
+                          <a
+                            href={reg.github_profile}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs font-bold text-[#0000ff] hover:underline"
+                          >
+                            GitHub
+                          </a>
+                        </div>
+                      )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900">{reg.phone}</div>
