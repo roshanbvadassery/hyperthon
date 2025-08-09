@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import { Users, MapPin, Calendar, Download, Zap, RefreshCw, LogOut, Lock } from "lucide-react";
+import { Users, MapPin, Calendar, Download, Zap, RefreshCw, LogOut, Lock, Check, X } from "lucide-react";
 import Link from "next/link";
 import type { User } from '@supabase/supabase-js';
 
@@ -38,6 +38,12 @@ interface Analytics {
   most_popular_city: string;
   avg_registrations_per_day: number;
 }
+
+// Local approval status (client-side only)
+type ApprovalStatus = 'pending' | 'approved' | 'rejected';
+
+const getStatusesStorageKey = (user?: User | null) =>
+  user?.id ? `admin-statuses:${user.id}` : 'admin-statuses:anonymous';
 
 // Add login component
 function AdminLogin({ onLogin }: { onLogin: (user: User) => void }) {
@@ -130,11 +136,14 @@ export default function AdminDashboard() {
   const [cityStats, setCityStats] = useState<CityStats[]>([]);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState({
+  const [filter, setFilter] = useState<{ city: string; experience: string; searchTerm: string; status: '' | ApprovalStatus }>({
     city: "",
     experience: "",
-    searchTerm: ""
+    searchTerm: "",
+    status: ""
   });
+  const [hasLoaded, setHasLoaded] = useState(false);
+  const [statuses, setStatuses] = useState<Record<string, ApprovalStatus>>({});
 
   // Check authentication status
   useEffect(() => {
@@ -147,8 +156,10 @@ export default function AdminDashboard() {
     // Listen for auth changes
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'USER_UPDATED') {
+        setUser(session?.user ?? null);
+      }
       setAuthLoading(false);
     });
 
@@ -181,18 +192,64 @@ export default function AdminDashboard() {
       setCityStats(data.cityStats || []);
       setAnalytics(data.analytics);
 
+      // Initialize/merge local statuses for incoming registrations (default: pending)
+      setStatuses((prev) => {
+        const ids = new Set<string>((data.registrations || []).map((r: Registration) => r.id));
+        const merged: Record<string, ApprovalStatus> = {};
+        // Keep only current registration ids
+        for (const id of ids) {
+          merged[id] = prev[id] || 'pending';
+        }
+        return merged;
+      });
+
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
+      setHasLoaded(true);
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (user) {
+    if (user?.id) {
+      // Load saved statuses from localStorage on login/session ready
+      try {
+        const raw = localStorage.getItem(getStatusesStorageKey(user));
+        if (raw) {
+          const parsed = JSON.parse(raw) as Record<string, ApprovalStatus>;
+          setStatuses(parsed);
+        }
+      } catch (e) {
+        console.warn('Failed to load saved statuses');
+      }
+      // Fetch latest data after restoring statuses
       fetchData();
     }
-  }, [user]);
+  }, [user?.id]);
+
+  useEffect(() => {
+    // Persist statuses whenever they change
+    try {
+      if (user) {
+        localStorage.setItem(getStatusesStorageKey(user), JSON.stringify(statuses));
+      }
+    } catch (e) {
+      console.warn('Failed to persist statuses');
+    }
+  }, [statuses, user]);
+
+  const handleApprove = (id: string) => {
+    setStatuses((prev) => ({ ...prev, [id]: 'approved' }));
+  };
+
+  const handleReject = (id: string) => {
+    setStatuses((prev) => ({ ...prev, [id]: 'rejected' }));
+  };
+
+  const handleResetStatus = (id: string) => {
+    setStatuses((prev) => ({ ...prev, [id]: 'pending' }));
+  };
 
   // Show loading during auth check
   if (authLoading) {
@@ -249,11 +306,13 @@ export default function AdminDashboard() {
       reg.first_name.toLowerCase().includes(filter.searchTerm.toLowerCase()) ||
       reg.last_name.toLowerCase().includes(filter.searchTerm.toLowerCase()) ||
       reg.email.toLowerCase().includes(filter.searchTerm.toLowerCase());
+    const currentStatus: ApprovalStatus = statuses[reg.id] || 'pending';
+    const matchesStatus = !filter.status || currentStatus === filter.status;
     
-    return matchesCity && matchesExperience && matchesSearch;
+    return matchesCity && matchesExperience && matchesSearch && matchesStatus;
   });
 
-  if (loading) {
+  if (loading && !hasLoaded) {
     return (
       <div className="min-h-screen bg-[#0000ff] flex items-center justify-center">
         <div className="text-white text-center">
@@ -402,7 +461,7 @@ export default function AdminDashboard() {
           </div>
           
           <div className="p-6 border-b">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <input
                 type="text"
                 placeholder="Search by name or email..."
@@ -431,6 +490,16 @@ export default function AdminDashboard() {
                 <option value="Advanced (3-5 years)">Advanced (3-5 years)</option>
                 <option value="Expert (5+ years)">Expert (5+ years)</option>
               </select>
+              <select
+                value={filter.status}
+                onChange={(e) => setFilter({ ...filter, status: e.target.value as '' | ApprovalStatus })}
+                className="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0000ff]"
+              >
+                <option value="">All Statuses</option>
+                <option value="approved">Approved</option>
+                <option value="rejected">Rejected</option>
+                <option value="pending">Pending</option>
+              </select>
             </div>
           </div>
 
@@ -445,58 +514,102 @@ export default function AdminDashboard() {
                   <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Experience</th>
                   <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Languages</th>
                   <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Date</th>
+                  <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
+                  <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {filteredRegistrations.map((reg) => (
-                  <tr key={reg.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="font-semibold text-gray-900">{reg.first_name} {reg.last_name}</div>
-                      <div className="text-sm text-gray-500">{reg.email}</div>
-                      {reg.github_profile && (
-                        <div className="mt-1">
-                          <a
-                            href={reg.github_profile}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-xs font-bold text-[#0000ff] hover:underline"
-                          >
-                            GitHub
-                          </a>
-                        </div>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{reg.phone}</div>
-                      {reg.telegram && <div className="text-sm text-gray-500">{reg.telegram}</div>}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="px-2 py-1 text-xs font-bold bg-[#0000ff] text-white rounded-full">
-                        {reg.city}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {reg.experience_level}
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex flex-wrap gap-1">
-                        {reg.preferred_languages.slice(0, 3).map((lang) => (
-                          <span key={lang} className="px-2 py-1 text-xs bg-gray-100 text-gray-800 rounded">
-                            {lang}
-                          </span>
-                        ))}
-                        {reg.preferred_languages.length > 3 && (
-                          <span className="px-2 py-1 text-xs bg-gray-100 text-gray-800 rounded">
-                            +{reg.preferred_languages.length - 3}
-                          </span>
+                {filteredRegistrations.map((reg) => {
+                  const status: ApprovalStatus = statuses[reg.id] || 'pending';
+                  return (
+                    <tr key={reg.id} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="font-semibold text-gray-900">{reg.first_name} {reg.last_name}</div>
+                        <div className="text-sm text-gray-500">{reg.email}</div>
+                        {reg.github_profile && (
+                          <div className="mt-1">
+                            <a
+                              href={reg.github_profile}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-xs font-bold text-[#0000ff] hover:underline"
+                            >
+                              GitHub
+                            </a>
+                          </div>
                         )}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {new Date(reg.created_at).toLocaleDateString()}
-                    </td>
-                  </tr>
-                ))}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">{reg.phone}</div>
+                        {reg.telegram && <div className="text-sm text-gray-500">{reg.telegram}</div>}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className="px-2 py-1 text-xs font-bold bg-[#0000ff] text-white rounded-full">
+                          {reg.city}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {reg.experience_level}
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex flex-wrap gap-1">
+                          {reg.preferred_languages.slice(0, 3).map((lang) => (
+                            <span key={lang} className="px-2 py-1 text-xs bg-gray-100 text-gray-800 rounded">
+                              {lang}
+                            </span>
+                          ))}
+                          {reg.preferred_languages.length > 3 && (
+                            <span className="px-2 py-1 text-xs bg-gray-100 text-gray-800 rounded">
+                              +{reg.preferred_languages.length - 3}
+                            </span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {new Date(reg.created_at).toLocaleDateString()}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={
+                          `px-2 py-1 text-xs font-bold rounded-full ${
+                            status === 'approved' ? 'bg-green-100 text-green-800' :
+                            status === 'rejected' ? 'bg-red-100 text-red-800' :
+                            'bg-gray-100 text-gray-800'
+                          }`
+                        }>
+                          {status.charAt(0).toUpperCase() + status.slice(1)}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => handleApprove(reg.id)}
+                            className={`flex items-center gap-1 px-3 py-1 rounded text-xs font-bold transition-colors ${
+                              status === 'approved' ? 'bg-green-600 text-white' : 'bg-green-100 text-green-800 hover:bg-green-200'
+                            }`}
+                          >
+                            <Check className="h-3 w-3" /> Approve
+                          </button>
+                          <button
+                            onClick={() => handleReject(reg.id)}
+                            className={`flex items-center gap-1 px-3 py-1 rounded text-xs font-bold transition-colors ${
+                              status === 'rejected' ? 'bg-red-600 text-white' : 'bg-red-100 text-red-800 hover:bg-red-200'
+                            }`}
+                          >
+                            <X className="h-3 w-3" /> Reject
+                          </button>
+                          {status !== 'pending' && (
+                            <button
+                              onClick={() => handleResetStatus(reg.id)}
+                              className="px-3 py-1 rounded text-xs font-bold bg-gray-100 text-gray-800 hover:bg-gray-200 transition-colors"
+                            >
+                              Reset
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
