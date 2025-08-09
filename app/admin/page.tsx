@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import { Users, MapPin, Calendar, Download, Zap, RefreshCw, LogOut, Lock, Check, X } from "lucide-react";
+import { Users, MapPin, Calendar, Download, Zap, RefreshCw, LogOut, Lock, Check, X, Mail } from "lucide-react";
 import Link from "next/link";
 import type { User } from '@supabase/supabase-js';
 
@@ -144,6 +144,15 @@ export default function AdminDashboard() {
   });
   const [hasLoaded, setHasLoaded] = useState(false);
   const [statuses, setStatuses] = useState<Record<string, ApprovalStatus>>({});
+  const [emailDialog, setEmailDialog] = useState<{
+    open: boolean;
+    registration: Registration | null;
+    sending: boolean;
+  }>({
+    open: false,
+    registration: null,
+    sending: false
+  });
 
   // Check authentication status
   useEffect(() => {
@@ -249,6 +258,58 @@ export default function AdminDashboard() {
 
   const handleResetStatus = (id: string) => {
     setStatuses((prev) => ({ ...prev, [id]: 'pending' }));
+  };
+
+  const handleSendEmail = (registration: Registration) => {
+    setEmailDialog({
+      open: true,
+      registration,
+      sending: false
+    });
+  };
+
+  const confirmSendEmail = async () => {
+    if (!emailDialog.registration) return;
+
+    setEmailDialog(prev => ({ ...prev, sending: true }));
+
+    try {
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`
+        },
+        body: JSON.stringify({
+          email: emailDialog.registration.email,
+          name: `${emailDialog.registration.first_name} ${emailDialog.registration.last_name}`
+        })
+      });
+
+      if (response.ok) {
+        alert('Email sent successfully!');
+      } else {
+        const error = await response.json();
+        alert(`Failed to send email: ${error.error}`);
+      }
+    } catch (error) {
+      alert('Failed to send email. Please try again.');
+      console.error('Email sending error:', error);
+    } finally {
+      setEmailDialog({
+        open: false,
+        registration: null,
+        sending: false
+      });
+    }
+  };
+
+  const cancelSendEmail = () => {
+    setEmailDialog({
+      open: false,
+      registration: null,
+      sending: false
+    });
   };
 
   // Show loading during auth check
@@ -584,7 +645,16 @@ export default function AdminDashboard() {
                     <tr key={reg.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="font-semibold text-gray-900">{reg.first_name} {reg.last_name}</div>
-                        <div className="text-sm text-gray-500">{reg.email}</div>
+                        <div className="text-sm text-gray-500 flex items-center gap-2">
+                          {reg.email}
+                          <button
+                            onClick={() => handleSendEmail(reg)}
+                            className="flex items-center gap-1 px-2 py-1 rounded text-xs font-bold transition-colors bg-blue-100 text-blue-800 hover:bg-blue-200"
+                            title="Send approval email"
+                          >
+                            <Mail className="h-3 w-3" />
+                          </button>
+                        </div>
                         {reg.github_profile && (
                           <div className="mt-1">
                             <a
@@ -680,6 +750,76 @@ export default function AdminDashboard() {
           )}
         </div>
       </div>
+
+      {/* Email Confirmation Dialog */}
+      {emailDialog.open && emailDialog.registration && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-6 max-w-md w-full mx-4">
+            <h3 className="text-xl font-black text-[#0000ff] mb-4">Confirm Email Send</h3>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">To:</label>
+                <p className="text-sm text-gray-900">{emailDialog.registration.email}</p>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">CC:</label>
+                <p className="text-sm text-gray-900">roshan@permissionless.net, hasan@widecanvas.ai</p>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Subject:</label>
+                <p className="text-sm text-gray-900">Approved for Hyperthon 2025 - Bangalore</p>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Message:</label>
+                <div className="bg-gray-50 p-3 rounded text-sm text-gray-900 whitespace-pre-line">
+{`Hi ${emailDialog.registration.first_name} ${emailDialog.registration.last_name},
+
+Looking forward to hosting this year's first hyperthon with you tomorrow!
+
+Time: 2 pm - 7 pm
+
+Venue:
+Zo House, Koramangala (https://share.google/UdkUL7vi1yPTq6ucA)
+
+Best Regards,
+Team Hyperthon`}
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex justify-end space-x-3 mt-6">
+              <button
+                onClick={cancelSendEmail}
+                disabled={emailDialog.sending}
+                className="px-4 py-2 bg-gray-500 text-white rounded-lg font-bold hover:bg-gray-600 transition-colors disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmSendEmail}
+                disabled={emailDialog.sending}
+                className="px-4 py-2 bg-[#0000ff] text-white rounded-lg font-bold hover:bg-[#0000cc] transition-colors disabled:opacity-50 flex items-center"
+              >
+                {emailDialog.sending ? (
+                  <>
+                    <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full mr-2"></div>
+                    Sending...
+                  </>
+                ) : (
+                  <>
+                    <Mail className="h-4 w-4 mr-2" />
+                    Send Email
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 } 
