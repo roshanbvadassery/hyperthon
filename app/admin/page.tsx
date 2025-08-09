@@ -299,6 +299,41 @@ export default function AdminDashboard() {
     window.URL.revokeObjectURL(url);
   };
 
+  const exportApprovedToCSV = () => {
+    const approvedRegistrations = registrations.filter(reg => 
+      (statuses[reg.id] || 'pending') === 'approved'
+    );
+
+    const headers = [
+      'Name', 'Email', 'Phone', 'Telegram', 'City', 'Experience',
+      'Languages', 'GitHub', 'LinkedIn', 'Registration Date'
+    ];
+
+    const csvContent = [
+      headers.join(','),
+      ...approvedRegistrations.map(reg => [
+        `"${reg.first_name} ${reg.last_name}"`,
+        reg.email,
+        reg.phone,
+        reg.telegram || '',
+        reg.city,
+        `"${reg.experience_level}"`,
+        `"${reg.preferred_languages.join('; ')}"`,
+        reg.github_profile || '',
+        reg.linkedin_profile || '',
+        new Date(reg.created_at).toLocaleDateString()
+      ].join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `hyperthon-approved-registrations-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
   const filteredRegistrations = registrations.filter(reg => {
     const matchesCity = !filter.city || reg.city === filter.city;
     const matchesExperience = !filter.experience || reg.experience_level === filter.experience;
@@ -311,6 +346,11 @@ export default function AdminDashboard() {
     
     return matchesCity && matchesExperience && matchesSearch && matchesStatus;
   });
+
+  // Calculate approval statistics
+  const approvedCount = registrations.filter(reg => 
+    (statuses[reg.id] || 'pending') === 'approved'
+  ).length;
 
   if (loading && !hasLoaded) {
     return (
@@ -368,13 +408,23 @@ export default function AdminDashboard() {
       <div className="container mx-auto px-4 py-8">
         {/* Analytics Cards */}
         {analytics && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
             <div className="bg-white rounded-xl p-6 shadow-lg">
               <div className="flex items-center">
                 <Users className="h-8 w-8 text-[#0000ff] mr-3" />
                 <div>
                   <p className="text-sm font-semibold text-gray-600">Total Registrations</p>
                   <p className="text-2xl font-black text-[#0000ff]">{analytics.total_registrations}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl p-6 shadow-lg">
+              <div className="flex items-center">
+                <Check className="h-8 w-8 text-green-500 mr-3" />
+                <div>
+                  <p className="text-sm font-semibold text-gray-600">Approved</p>
+                  <p className="text-2xl font-black text-[#0000ff]">{approvedCount}</p>
                 </div>
               </div>
             </div>
@@ -450,13 +500,22 @@ export default function AdminDashboard() {
           <div className="p-6 border-b">
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-black text-[#0000ff] uppercase">Registrations</h2>
-              <button
-                onClick={exportToCSV}
-                className="flex items-center px-4 py-2 bg-lime-400 text-black rounded-lg font-bold hover:bg-lime-300 transition-colors"
-              >
-                <Download className="h-4 w-4 mr-2" />
-                Export CSV
-              </button>
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={exportToCSV}
+                  className="flex items-center px-4 py-2 bg-lime-400 text-black rounded-lg font-bold hover:bg-lime-300 transition-colors"
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Export All CSV
+                </button>
+                <button
+                  onClick={exportApprovedToCSV}
+                  className="flex items-center px-4 py-2 bg-green-400 text-black rounded-lg font-bold hover:bg-green-300 transition-colors"
+                >
+                  <Check className="h-4 w-4 mr-2" />
+                  Export Approved CSV
+                </button>
+              </div>
             </div>
           </div>
           
