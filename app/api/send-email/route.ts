@@ -33,7 +33,9 @@ export async function POST(request: NextRequest) {
 
 Looking forward to hosting this year's first hyperthon with you tomorrow!
 
-Time: 2 pm - 7 pm
+Date: 10th August 2025 (Sunday)
+
+Time: 2 pm - 7 pm (IST)
 
 Venue:
 Zo House, Koramangala (https://share.google/UdkUL7vi1yPTq6ucA)
