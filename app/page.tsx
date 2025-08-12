@@ -245,7 +245,7 @@ export default function Home() {
                 city: "Bangalore", 
                 date: "10th August 2025", 
                 venue: "Zo House", 
-                status: "upcoming"
+                status: "planned"
               },
               { 
                 city: "Goa", 
@@ -319,7 +319,7 @@ export default function Home() {
                 
                 {event.status === 'planned' ? (
                   <div className="w-full py-2 sm:py-3 rounded-full font-black text-xs sm:text-sm uppercase tracking-wide text-center cursor-pointer transition-colors bg-gray-400 text-white">
-                    COMING SOON
+                    Completed
                   </div>
                 ) : (
                   <Link 
