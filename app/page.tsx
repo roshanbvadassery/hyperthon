@@ -249,7 +249,7 @@ export default function Home() {
               },
               { 
                 city: "Goa", 
-                date: "16th August 2025", 
+                date: "15th August 2025", 
                 venue: "Stay Vista", 
                 status: "upcoming"
               },

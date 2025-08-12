@@ -22,7 +22,7 @@ export default function Register() {
 
   const cities = [
     { name: "Bangalore", date: "10th August 2025", venue: "Zo House", available: true },
-    { name: "Goa", date: "16th August 2025", venue: "Stay Vista", available: true },
+    { name: "Goa", date: "15th August 2025", venue: "Stay Vista", available: true },
     { name: "Mumbai", date: "17th August 2025", venue: "TBD", available: false },
     { name: "Pune", date: "23rd August 2025", venue: "TBD", available: false },
     { name: "Ahmedabad", date: "24th August 2025", venue: "TBD", available: false },
