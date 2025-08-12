@@ -21,15 +21,15 @@ export default function Register() {
   });
 
   const cities = [
-    { name: "Bangalore", date: "10th August 2025", venue: "Zo House", available: true },
+    { name: "Bangalore", date: "10th August 2025", venue: "Zo House", available: false },
     { name: "Goa", date: "15th August 2025", venue: "Stay Vista", available: true },
-    { name: "Mumbai", date: "17th August 2025", venue: "TBD", available: false },
-    { name: "Pune", date: "23rd August 2025", venue: "TBD", available: false },
-    { name: "Ahmedabad", date: "24th August 2025", venue: "TBD", available: false },
-    { name: "Delhi / Gurgaon", date: "30th August 2025", venue: "TBD", available: false },
+    { name: "Mumbai", date: "17th August 2025", venue: "TBD", available: true },
+    { name: "Pune", date: "23rd August 2025", venue: "TBD", available: true },
+    { name: "Ahmedabad", date: "24th August 2025", venue: "TBD", available: true },
+    { name: "Delhi / Gurgaon", date: "30th August 2025", venue: "TBD", available: true },
     { name: "Jaipur", date: "31st August 2025", venue: "Jaipur University", available: true },
-    { name: "Kochi", date: "6th Sept 2025", venue: "TBD", available: false },
-    { name: "Hyderabad", date: "Coming Soon", venue: "TBD", available: false }
+    { name: "Kochi", date: "6th Sept 2025", venue: "TBD", available: true },
+    { name: "Hyderabad", date: "Coming Soon", venue: "TBD", available: true }
   ];
 
   const programmingLanguages = [

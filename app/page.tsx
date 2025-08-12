@@ -257,25 +257,25 @@ export default function Home() {
                 city: "Mumbai", 
                 date: "17th August 2025", 
                 venue: "TBD", 
-                status: "planned"
+                status: "upcoming"
               },
               { 
                 city: "Pune", 
                 date: "23rd August 2025", 
                 venue: "TBD", 
-                status: "planned"
+                status: "upcoming"
               },
               { 
                 city: "Ahmedabad", 
                 date: "24th August 2025", 
                 venue: "TBD", 
-                status: "planned"
+                status: "upcoming"
               },
               { 
                 city: "Delhi / Gurgaon", 
                 date: "30th August 2025", 
                 venue: "TBD", 
-                status: "planned"
+                status: "upcoming"
               },
               { 
                 city: "Jaipur", 
@@ -287,13 +287,13 @@ export default function Home() {
                 city: "Kochi", 
                 date: "6th Sept 2025", 
                 venue: "TBD", 
-                status: "planned"
+                status: "upcoming"
               },
               { 
                 city: "Hyderabad", 
                 date: "Coming Soon", 
                 venue: "TBD", 
-                status: "planned"
+                status: "upcoming"
               },
             ].map((event, index) => (
               <div key={index} className="bg-white rounded-[1.5rem] sm:rounded-[2rem] p-4 sm:p-6 hover:scale-105 transition-transform">
