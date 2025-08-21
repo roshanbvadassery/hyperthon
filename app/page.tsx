@@ -25,6 +25,7 @@ export default function Home() {
             <a href="#about" className="text-white hover:text-lime-300 transition-colors font-bold uppercase scroll-smooth">About</a>
             <a href="#tour" className="text-white hover:text-lime-300 transition-colors font-bold uppercase scroll-smooth">Tour</a>
             <Link href="/register" className="text-white hover:text-lime-300 transition-colors font-bold uppercase scroll-smooth">Register</Link>
+            <Link href="/voting" className="text-white hover:text-lime-300 transition-colors font-bold uppercase scroll-smooth">Voting</Link>
             <a 
               href="https://youtu.be/pA76_X43RdM"
               target="_blank"
@@ -87,6 +88,13 @@ export default function Home() {
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Register
+              </Link>
+              <Link 
+                href="/voting" 
+                className="text-white hover:text-lime-300 transition-colors font-bold uppercase text-2xl scroll-smooth"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Voting
               </Link>
               <a 
                 href="https://youtu.be/pA76_X43RdM"
