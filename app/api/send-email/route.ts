@@ -33,12 +33,12 @@ export async function POST(request: NextRequest) {
 
 Looking forward to hosting this year's first hyperthon with you tomorrow!
 
-Date: 10th August 2025 (Sunday)
+Date: 23rd August 2025 (Saturday)
 
-Time: 2 pm - 7 pm (IST)
+Time: 3 pm - 8 pm (IST)
 
 Venue:
-Zo House, Koramangala (https://share.google/UdkUL7vi1yPTq6ucA)
+Ideas to Impacts, Baner (https://share.google/v1wo0sgUZJMDgWkPJ)
 
 Best Regards,
 Team Hyperthon`;
@@ -47,7 +47,7 @@ Team Hyperthon`;
       from: 'Team Hyperthon <noreply@hyperthon.org>',
       to: [email],
       cc: ['roshan@permissionless.net', 'hasan@widecanvas.ai'],
-      subject: 'Approved for Hyperthon 2025 - Bangalore',
+      subject: 'Approved for Hyperthon 2025 - Pune',
       text: emailContent,
     });
 

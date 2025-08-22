@@ -770,7 +770,7 @@ export default function AdminDashboard() {
               
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1">Subject:</label>
-                <p className="text-sm text-gray-900">Approved for Hyperthon 2025 - Bangalore</p>
+                <p className="text-sm text-gray-900">Approved for Hyperthon 2025 - Pune</p>
               </div>
               
               <div>
@@ -780,10 +780,12 @@ export default function AdminDashboard() {
 
 Looking forward to hosting this year's first hyperthon with you tomorrow!
 
-Time: 2 pm - 7 pm
+Date: 23rd August 2025 (Saturday)
+
+Time: 3 pm - 8 pm (IST)
 
 Venue:
-Zo House, Koramangala (https://share.google/UdkUL7vi1yPTq6ucA)
+Ideas to Impacts, Baner (https://share.google/v1wo0sgUZJMDgWkPJ)
 
 Best Regards,
 Team Hyperthon`}
