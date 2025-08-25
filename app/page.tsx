@@ -259,23 +259,23 @@ export default function Home() {
                 city: "Goa", 
                 date: "15th August 2025", 
                 venue: "Stay Vista", 
-                status: "upcoming"
+                status: "planned"
               },
               { 
                 city: "Mumbai", 
-                date: "17th August 2025", 
+                date: "September 2025", 
                 venue: "TBD", 
                 status: "upcoming"
               },
               { 
                 city: "Pune", 
                 date: "23rd August 2025", 
-                venue: "TBD", 
-                status: "upcoming"
+                venue: "I2I, Baner", 
+                status: "planned"
               },
               { 
                 city: "Ahmedabad", 
-                date: "24th August 2025", 
+                date: "27th August 2025", 
                 venue: "TBD", 
                 status: "upcoming"
               },
