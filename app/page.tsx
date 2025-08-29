@@ -280,8 +280,8 @@ export default function Home() {
                 status: "upcoming"
               },
               { 
-                city: "Delhi / Gurgaon", 
-                date: "30th August 2025", 
+                city: "Delhi NCR", 
+                date: "31st August 2025", 
                 venue: "TBD", 
                 status: "upcoming"
               },
