@@ -785,7 +785,7 @@ Date: 31st August 2025 (Sunday)
 Time: 2 pm - 7 pm (IST)
 
 Venue:
-Aliste Technologies, Sector 63, Noida (https://share.google/u0WCXOFB6wTQsartB)
+Aliste Technologies, Sector 63, Noida (https://maps.app.goo.gl/YjQtQpw2N5MaB8wVA?g_st=ipc)
 
 Best Regards,
 Team Hyperthon`}
