@@ -28,7 +28,7 @@ export default function Register() {
     { name: "Ahmedabad", date: "27th August 2025", venue: "TBD", available: true },
     { name: "Delhi NCR", date: "31st August 2025", venue: "TBD", available: true },
     { name: "Jaipur", date: "31st August 2025", venue: "Jaipur University", available: true },
-    { name: "Kochi", date: "6th Sept 2025", venue: "TBD", available: true },
+    { name: "Kochi", date: "13th Sept 2025", venue: "TinkerSpace, Kochi", available: true },
     { name: "Hyderabad", date: "Coming Soon", venue: "TBD", available: true }
   ];
 

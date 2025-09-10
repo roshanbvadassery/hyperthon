@@ -293,8 +293,8 @@ export default function Home() {
               },
               { 
                 city: "Kochi", 
-                date: "6th Sept 2025", 
-                venue: "TBD", 
+                date: "13th Sept 2025", 
+                venue: "TinkerSpace, Kochi", 
                 status: "upcoming"
               },
               { 
