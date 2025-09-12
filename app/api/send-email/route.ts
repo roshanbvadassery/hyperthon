@@ -33,12 +33,12 @@ export async function POST(request: NextRequest) {
 
 Looking forward to hosting this year's first hyperthon with you tomorrow!
 
-Date: 31st August 2025 (Sunday)
+Date: 13th September (Saturday)
 
-Time: 2 pm - 7 pm (IST)
+Time: 2 pm - 8 pm (IST)
 
 Venue:
-Aliste Technologies, Sector 63, Noida (https://maps.app.goo.gl/YjQtQpw2N5MaB8wVA)
+TinkerSpace, Kochi (https://maps.app.goo.gl/GqjTwnh2qPJFjsD46?g_st=ipc)
 
 Best Regards,
 Team Hyperthon`;
@@ -47,7 +47,7 @@ Team Hyperthon`;
       from: 'Team Hyperthon <noreply@hyperthon.org>',
       to: [email],
       cc: ['roshan@permissionless.net', 'hasan@widecanvas.ai'],
-      subject: 'Approved for Hyperthon 2025 - Delhi NCR',
+      subject: 'Approved for Hyperthon 2025 - Kochi',
       text: emailContent,
     });
 

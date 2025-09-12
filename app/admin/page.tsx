@@ -770,7 +770,7 @@ export default function AdminDashboard() {
               
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1">Subject:</label>
-                <p className="text-sm text-gray-900">Approved for Hyperthon 2025 - Delhi NCR</p>
+                <p className="text-sm text-gray-900">Approved for Hyperthon 2025 - Kochi</p>
               </div>
               
               <div>
@@ -780,12 +780,12 @@ export default function AdminDashboard() {
 
 Looking forward to hosting this year's first hyperthon with you tomorrow!
 
-Date: 31st August 2025 (Sunday)
+Date: 13th September (Saturday)
 
-Time: 2 pm - 7 pm (IST)
+Time: 2 pm - 8 pm (IST)
 
 Venue:
-Aliste Technologies, Sector 63, Noida (https://maps.app.goo.gl/YjQtQpw2N5MaB8wVA)
+TinkerSpace, Kochi (https://maps.app.goo.gl/GqjTwnh2qPJFjsD46?g_st=ipc)
 
 Best Regards,
 Team Hyperthon`}
