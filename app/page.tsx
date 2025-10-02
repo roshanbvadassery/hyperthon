@@ -137,18 +137,18 @@ export default function Home() {
 
             {/* Action buttons */}
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-6 sm:mb-8">
-              <Link href="/register" className="bg-[#0000ff] text-white px-6 sm:px-10 py-3 sm:py-4 rounded-full font-black text-sm sm:text-lg uppercase tracking-wide cursor-pointer hover:bg-[#0000cc] transition-colors flex items-center justify-center">
+              {/* <Link href="/register" className="bg-[#0000ff] text-white px-6 sm:px-10 py-3 sm:py-4 rounded-full font-black text-sm sm:text-lg uppercase tracking-wide cursor-pointer hover:bg-[#0000cc] transition-colors flex items-center justify-center">
                 <Zap className="mr-2 h-4 w-4 sm:h-6 sm:w-6" />
                 REGISTER NOW
-              </Link>
+              </Link> */}
               <a
-                href="https://youtu.be/pA76_X43RdM"
+                href="https://luma.com/dtipwaz1"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-black text-white px-6 sm:px-10 py-3 sm:py-4 rounded-full font-black text-sm sm:text-lg uppercase tracking-wide cursor-pointer hover:bg-gray-800 transition-colors flex items-center justify-center"
+                className="bg-[#0000ff] text-white px-6 sm:px-10 py-3 sm:py-4 rounded-full font-black text-sm sm:text-lg uppercase tracking-wide cursor-pointer hover:bg-gray-800 transition-colors flex items-center justify-center"
               >
-                <Play className="mr-2 h-4 w-4 sm:h-6 sm:w-6" />
-                WATCH HIGHLIGHTS
+                <Zap className="mr-2 h-4 w-4 sm:h-6 sm:w-6" />
+                REGISTER FOR WILDCARD (BLR)
               </a>
             </div>
 
