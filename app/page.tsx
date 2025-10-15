@@ -255,7 +255,7 @@ export default function Home() {
               { 
                 city: "Mumbai", 
                 date: "October 2025", 
-                venue: "Over The Moon Studio, Andheri", 
+                venue: "Of10 Co-Working, Powai", 
                 status: "upcoming"
               },
               { 
