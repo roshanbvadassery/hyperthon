@@ -33,12 +33,12 @@ export async function POST(request: NextRequest) {
 
 Looking forward to hosting this year's first hyperthon with you tomorrow!
 
-Date: 13th September (Saturday)
+Date: 18th October 2025
 
-Time: 2 pm - 8 pm (IST)
+Time: 12 noon - 5 pm (IST)
 
 Venue:
-TinkerSpace, Kochi (https://maps.app.goo.gl/GqjTwnh2qPJFjsD46?g_st=ipc)
+Of10 - Coworking Space, Powai, Mumbai (https://maps.app.goo.gl/9xja75vPfGmvJYxf8)
 
 Best Regards,
 Team Hyperthon`;
@@ -47,7 +47,7 @@ Team Hyperthon`;
       from: 'Team Hyperthon <noreply@hyperthon.org>',
       to: [email],
       cc: ['roshan@permissionless.net', 'hasan@widecanvas.ai'],
-      subject: 'Approved for Hyperthon 2025 - Kochi',
+      subject: 'Approved for Hyperthon 2025 - Mumbai',
       text: emailContent,
     });
 
